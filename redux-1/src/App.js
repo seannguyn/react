@@ -1,27 +1,33 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Posts from './Components/Posts.js'
 import AddPost from './Components/AddPost.js'
-
+import About from './Components/About.js'
+import AddTodo from './Components/AddTodo.js'
+import Header from './Components/Header.js'
 import {Provider} from 'react-redux';
-import store from './store'
+import store from './store';
+
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to React</h1>
-          </header>
+        <Router>
 
-          <AddPost/>
+          <div className="App">
+            <Header/>
 
-          <hr/>
+            <Switch>
+              <Route exact path="/post" component={AddPost} ></Route>
+              <Route exact path="/todo" component={AddTodo} ></Route>
+              <Route exact path="/" component={About} ></Route>
+            </Switch>
 
-          <Posts/>
-        </div>
+
+
+          </div>
+        </Router>
       </Provider>
     );
   }

@@ -11,8 +11,6 @@ export function fetchPosts() {
     dispatch({
       type: FETCH_POSTS,
       payload: res.data})
-
-
   }
 };
 

@@ -1,7 +1,7 @@
 import React from 'react'
-import axios from 'axios'
 import { connect } from 'react-redux';
 import { createPost } from '../actions/postActions';
+import Posts from './Posts'
 
 class AddPost extends React.Component {
 
@@ -55,6 +55,9 @@ class AddPost extends React.Component {
 
           <input type="submit" className="btn btn-primary"/>
         </form>
+
+        <hr/>
+        <Posts/>
       </div>
     );
 
