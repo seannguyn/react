@@ -1,0 +1,11 @@
+npm i redux react-redux redux-thunk
+
+provider in App.js
+
+store.js
+
+reducer => index.js RootReducer
+
+action => type.js PostAction.js (switch statements)
+
+add connect, mapStateToProp in component js
