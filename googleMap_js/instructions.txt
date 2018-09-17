@@ -1,0 +1,5 @@
+1/ register with google js, get API key
+
+2/ load script, API key
+
+3/ initMap
