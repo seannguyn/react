@@ -1,0 +1,144 @@
+npm init
+  entry point: server.js
+  package.json
+    script: {
+      "client-install"  : "npm install --prefix client"
+      "start"           : "node server.js",
+      "server"          : "nodemon server.js",
+      "client"          : "cd client && npm start", "npm start --prefix client",
+      "dev"             : "concurrently \"npm run server\"  \"npm run client\""
+    }
+
+
+npm i express body-parser mongoose concurrently
+
+npm i -D nodemon
+
+touch server.js
+  const express = require('express')
+  const mongoose = require('mongoose')
+  const bodyParser = require('body-parser')
+
+  const app = express()
+
+  // init routes api
+  const items = require('./routes/api/items')
+
+  // bodyParser middleware
+  app.use(bodyParser.json())
+
+  // get mongoURI
+  const db = require('./config/key').mongoURI
+
+  //connect to mongoURI
+  mongo
+    .connect(db)
+    .then(() =>{console.log("connected to mongo")})
+    .catch((e) => console.log("error"))
+
+  // for deployment on heroku
+  const port = process.env.PORT || 5000
+
+  app.listen(port,() => {console.log(`server started on port: ${post}`)})
+
+  // use API routes
+  app.use('/api/items',items)
+
+
+get mlab URI
+
+config
+  key.js
+    module.exports = {
+      mongoURI: "...."
+    }
+
+to run type: npm runserver
+
+create model:
+model
+  Item.js
+    const mongoose = require('mongoose')
+    const Schema = mongoose.Schema
+
+    const ItemSchema = new Schema({
+      name: {
+        type: String,
+        required: true
+      },
+      date: {
+        type: Date,
+        default: Date
+      }
+    })
+
+    module.export = Item = mongoose.model('item',ItemSchema)
+
+routes
+  api
+    items.js
+      const express = require('express')
+      const router = express.Router()
+
+      // Item model
+      const Item = require('../../models/Item')
+
+      // @route : GET
+      // @desc  :get all items
+      // @public
+
+      router.get('/', (req, res) => {
+        Item.find()
+          .sort({ date: -1 })
+          .then((items) => res.json(items))
+      })
+
+      // @route : GET
+      // @desc  :get all items
+      // @public
+
+      router.post('/', (req, res) => {
+        Item.find()
+          .sort({ date: -1 })
+          .then((items) => res.json(items))
+      })
+
+      // @route : POST
+      // @desc  : create an item
+      // @public
+
+      router.post('/', (req, res) => {
+        const newItem = new Item({
+          name: req.body.name
+        })
+
+        newItem.save()
+          .then((item) => res.json(item))
+      })
+
+      // @route : DELETE
+      // @desc  : delete an item
+      // @public
+
+      router.delete('/:id', (req, res) => {
+        Item.findByID(req.params.id);
+          .then(
+            (item) => item.remove().then(() => res.json({'success': 'true'}))
+          )
+          .catch((err) => res.status(404).json({'success': 'false'}))
+      })
+
+
+      module.exports = router
+
+Test with postman after this API
+
+mkdir client
+  create-react-app .
+
+create a proxy
+"proxy": "http://localhost:5000"
+
+use concurrently to run both
+
+go ahead and create frontend
