@@ -2,7 +2,7 @@ import React from 'react'
 import Avatar from '@material-ui/core/Avatar';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = {
+const styles = theme =>({
   hover: {
     margin: '20px',
     borderTop:'2px orange solid',
@@ -19,7 +19,7 @@ const styles = {
   avatar: {
     margin: 10,
   },
-}
+})
 
 class Action extends React.Component {
 
