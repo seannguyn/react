@@ -1,0 +1,7 @@
+1. create a new project in google console
+
+2. install gcloud in terminals
+
+3. create google account, set ACD in environment
+
+4. write OCR code
