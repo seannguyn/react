@@ -1,0 +1,209 @@
+npm init
+
+npm install --save express morgan body-parser mongoose
+
+
+server.js
+
+  const express = require('express')
+  const morgan = requrie('morgan')
+  const bodyParser = require ('body-parser')
+
+  const app = express()
+
+
+  // middleare
+  app.use(morgan('dev'))
+  app.use(bodyParser.json())
+
+  // routes
+  app.use('/users',require('./Router/userRoute'))
+
+  // start the server
+  const port = process.env.PORT || 5000
+  app.listen(port, () => {
+    console.log("listening on port")
+  })
+
+npm install express-promise-router
+
+Router
+  userRoute.js
+
+    const express = require('express')
+    const passport = require('passport')
+    const passportConfig = require('../passport')
+
+    const router = require('express-promise-router')()
+
+    const UsersControllers = require('../Controllers/users')
+
+    router.route('/signup')
+      .post(UsersControllers.signUp)
+
+    router.route('/signin')
+      .post(UsersControllers.signIn)
+
+    router.route(passport.authenticate('jwt', {session: false}),'/secret')
+      .get(UsersControllers.secret)
+
+    module.exports = router;
+
+
+
+Controllers
+  users.js
+
+    const User = require('../Models/User')
+
+    module.exports = {
+
+        signUp: async (req, res, next) => {
+
+          //init
+          console.log("signup called...",req.value.body);
+
+          // check if email already existed
+          const {email, password} = req.value.body;
+          const findUser = await User.findOne({email})
+
+          if (findUser) {
+            return res.status(403).json({error: "email already registered"})
+          }
+
+          // create new user
+          const newUser = new User({
+            email,
+            password
+          })
+
+          await newUser.save()
+
+          //respond with token
+          res.json({'signUp': 'true'})
+        },
+
+        signIn: async (req, res, next) => {
+
+          res.json({'signIn': 'true'})
+        },
+
+        secret: async (req, res, next) => {
+          console.log("I manage to get here")
+          res.json({'secret': 'true'})
+        }
+    }
+
+
+npm install joi
+
+Helpers
+  routeHelpers.js
+
+    const Joi = require('joi')
+
+    module.exports = {
+
+      validateBody: (schema) => {
+        return (req, res, next) => {
+          const results= Joi.validate(req.body, schemas);
+
+          if (result.error) {
+            return res.status(400).json(result.error )
+          }
+
+          else {
+
+          }
+        }
+      },
+
+      schemas: {
+        authSchema: Joi.object().keys({
+          email: Joi.String().email(),
+          password: Joi.String().required()
+        })
+      }
+
+
+    }
+
+Config, key.js, connect to mongodb
+
+Models
+  User.js
+
+    const mongoose = require('mongoose')
+    const Schema = mongoose.Schema
+
+    // create a schema
+    const userSchema = new Schema({
+      email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true
+      },
+      password: {
+        type: String,
+        required: true,
+      },
+    })
+
+    // create a model
+    const User = mongoose.model('user',userSchema)
+
+    // export that model
+    model.exports = User
+
+npm install jsonwebtoken
+
+npm install passport passport-jwt
+npm install passport-local
+
+passport.js
+
+  const passport = require('passport')
+  const JwtStrategy = require('passport-jwt').Strategy
+  const {ExtractJwt} = require('passport-jwt')
+  const jwt_key = require('./Config/key').jwt_key
+  const User    = require('./Models/User')
+
+  passport.use(new JwtStrategy{
+    jwtFromRequest: ExtractJwt.fromHeader('authorization'),
+    secretOrKey:jwt_key
+  }, async (payload, done) => {
+    try {
+
+      //Find the user in the token
+
+      const user = User.findByID({payload.sub})
+
+      if (!user) {
+        return done(null,false)
+      }
+
+      //if user doesnt exist, handle it
+      return done(null,user)
+
+    } catch(e) {
+      done(error,false)
+    }
+  })
+
+  // localStrategy
+  passport.use(new localStrategy({
+    usernameField: 'email'
+  }, async (email,password,done) => {
+    try {
+      const user = User.findOne({email})
+      if (!user) {
+        return done(null,false)
+      }
+      else {
+        return done(null,user)
+      }
+    } catch (error) {
+      done(error,null)
+    }
+  }))

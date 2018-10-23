@@ -1,0 +1,7 @@
+1. scan hours and date and subject info
+
+2. match subject to date,
+
+3. match subject to hour, n log n, using binary tree
+
+4. print out the result,  
