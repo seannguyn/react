@@ -1,0 +1,18 @@
+_ Open 3 terminals
+
+_ start and stop redis:
+                            brew services start redis
+                            brew services stop redis
+
+_ start celery:
+                            celery worker -A celery_config -l info -c 5
+
+_ execute commands:
+                            use ipython
+
+
+_ Reference Link:
+
+https://www.agiliq.com/blog/2015/07/getting-started-with-celery-and-redis/#using-celery-with-a-package
+
+https://medium.com/@petehouston/install-and-config-redis-on-mac-os-x-via-homebrew-eb8df9a4f298
