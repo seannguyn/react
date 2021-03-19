@@ -23,7 +23,7 @@ django-heroku==0.3.1
 django-rest-auth==0.9.3
 django-tawkto==0.1
 django-watson==1.5.2
-djangorestframework==3.8.2
+djangorestframework==3.11.2
 djangorestframework-jwt==1.11.0
 drf-nested-routers==0.90.2
 Faker==0.8.17
